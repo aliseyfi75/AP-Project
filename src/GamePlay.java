@@ -92,7 +92,10 @@ class GamePlay extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                ss.fire(panel);
+                if(e.getButton() == MouseEvent.BUTTON1)
+                    ss.fireShot(panel);
+                else if(e.getButton() == MouseEvent.BUTTON3)
+                    ss.fireBomb(panel);
             }
 
             @Override
