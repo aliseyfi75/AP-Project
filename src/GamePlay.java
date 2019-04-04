@@ -14,17 +14,27 @@ class GamePlay extends JFrame {
     private String username;
     private Player player;
 
+    private BufferedImage cursorImg;
+    private Cursor blankCursor;
+
+
     final private int width = 1280;
     final private int height = 720;
 
     GamePlay(String username) {
         init(username);
         addItems(new GameState(width, height, ss));
+        cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+                cursorImg, new Point(0, 0), "blank cursor");
     }
 
     GamePlay(String username, GameState gs) {
         init(username);
         addItems(gs);
+        cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+                cursorImg, new Point(0, 0), "blank cursor");
     }
 
     private void init(String username) {
@@ -60,6 +70,7 @@ class GamePlay extends JFrame {
     }
 
     void start() {
+        panel.setCursor(blankCursor);
         addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -68,9 +79,8 @@ class GamePlay extends JFrame {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                ss.setAlignmentX(e.getX());
-                ss.setAlignmentY(e.getY());
-                panel.add(ss);
+                ss.moveToPoint(e.getX()-45,e.getY()-85);
+                panel.repaint();
             }
         });
         addMouseListener(new MouseListener() {

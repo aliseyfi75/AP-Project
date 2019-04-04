@@ -87,22 +87,12 @@ class PlayerMenu extends JFrame {
         add(rankingButton);
         newGameButton = new JButton("شروع بازی جدید");
         newGameButton.setBounds((width - bigButtonWidth) / 2, rankingButton.getY() - verticalMargin - buttonHeight, bigButtonWidth, buttonHeight);
-        newGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new GamePlay(username);
-            }
-        });
+        newGameButton.addActionListener(e -> new GamePlay(username).start());
         add(newGameButton);
         resumeButton = new JButton("ادامه بازی");
         resumeButton.setBounds((width - bigButtonWidth) / 2, newGameButton.getY() - verticalMargin - buttonHeight, bigButtonWidth, buttonHeight);
         resumeButton.setEnabled(player.hasResume());
-        resumeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new GamePlay(username, new GameState(player));
-            }
-        });
+        resumeButton.addActionListener(e -> new GamePlay(username, new GameState(player)).start());
         add(resumeButton);
         welcomeLabel = new JLabel("Hello, " + username + "!");
         welcomeLabel.setBounds((width - bigButtonWidth) / 2, resumeButton.getY() - verticalMargin - buttonHeight, bigButtonWidth, buttonHeight);
@@ -120,7 +110,7 @@ class PlayerMenu extends JFrame {
 class myPanel extends JPanel {
     private Image image;
 
-    public myPanel(Image image) {
+    myPanel(Image image) {
         this.image = image;
     }
 
