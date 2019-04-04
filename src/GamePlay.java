@@ -74,7 +74,8 @@ class GamePlay extends JFrame {
         addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-
+                ss.moveToPoint(e.getX()-45,e.getY()-85);
+                panel.repaint();
             }
 
             @Override
@@ -91,14 +92,11 @@ class GamePlay extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
-
+                ss.fire(panel);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                //TODO
-                // add this method
-                //Fire();
             }
 
             @Override
