@@ -17,6 +17,10 @@ class GamePlay extends JFrame {
     private BufferedImage cursorImg;
     private Cursor blankCursor;
 
+    private Thread worker;
+
+    private boolean mouseFlag;
+
 
     final private int width = 1280;
     final private int height = 720;
@@ -68,9 +72,25 @@ class GamePlay extends JFrame {
         ss.setBounds(gs.getSpaceshipX(), gs.getSpaceshipY(), ss.getIcon().getIconWidth(), ss.getIcon().getIconHeight());
         panel.add(ss);
     }
-
+    class Worker extends Thread {
+        public void run() {
+            while(true) {
+                if(mouseFlag) {
+                    ss.fireShot(panel);
+                    try {
+                        Worker.sleep(200);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                }
+                if (isInterrupted())
+                    break;
+            }
+        }
+    }
     void start() {
         panel.setCursor(blankCursor);
+
         addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -93,13 +113,21 @@ class GamePlay extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON1)
-                    ss.fireShot(panel);
-                else if(e.getButton() == MouseEvent.BUTTON3)
+                    mouseFlag = true;
+                else if(e.getButton() == MouseEvent.BUTTON3) {
                     ss.fireBomb(panel);
+                    mouseFlag = false;
+                }
+                worker = new Worker();
+                worker.start();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                if (worker != null) {
+                    worker.interrupt();
+                    worker = null;
+                }
             }
 
             @Override
