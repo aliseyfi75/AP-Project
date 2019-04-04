@@ -1,10 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +60,19 @@ class GamePlay extends JFrame {
     }
 
     void start() {
+        addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                ss.setAlignmentX(e.getX());
+                ss.setAlignmentY(e.getY());
+                panel.add(ss);
+            }
+        });
         addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
