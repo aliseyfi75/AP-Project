@@ -18,8 +18,11 @@ class GamePlay extends JFrame {
     private Cursor blankCursor;
 
     private Thread worker;
+    private Thread rest;
 
     private boolean mouseFlag;
+
+    private JLabel temperatureLabel;
 
 
     final private int width = 1280;
@@ -65,6 +68,11 @@ class GamePlay extends JFrame {
             }
         });
         ss = new Spaceship();
+        temperatureLabel = new JLabel("temperature = " + ss.getTemperature());
+        temperatureLabel.setBounds(100,100,200,200);
+        temperatureLabel.setForeground(Color.WHITE);
+        temperatureLabel.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(temperatureLabel);
         setVisible(true);
     }
 
@@ -75,10 +83,20 @@ class GamePlay extends JFrame {
     class Worker extends Thread {
         public void run() {
             while(true) {
-                if(mouseFlag) {
-                    ss.fireShot(panel);
+                if(mouseFlag && ss.getTemperature()<100) {
+                    ss.fireShot(panel, temperatureLabel);
                     try {
                         Worker.sleep(200);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                }
+                if(ss.getTemperature() >= 100){
+                    temperatureLabel.setText("wait");
+                    ss.setTemperature(0);
+                    System.out.println(ss.getTemperature());
+                    try {
+                        Worker.sleep(4000);
                     } catch (InterruptedException e) {
                         break;
                     }
@@ -88,14 +106,33 @@ class GamePlay extends JFrame {
             }
         }
     }
+    class Rest extends Thread{
+        public void run(){
+            while (true){
+                ss.rest(temperatureLabel);
+                try {
+                    Worker.sleep(25);
+                } catch (InterruptedException e) {
+                    break;
+                }
+                if (isInterrupted())
+                    break;
+            }
+        }
+    }
     void start() {
+        rest = new Rest();
+        rest.start();
         panel.setCursor(blankCursor);
-
         addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 ss.moveToPoint(e.getX()-45,e.getY()-85);
                 panel.repaint();
+                if (rest != null) {
+                    rest.interrupt();
+                    rest = null;
+                }
             }
 
             @Override
@@ -112,6 +149,10 @@ class GamePlay extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
+                if (rest != null) {
+                    rest.interrupt();
+                    rest = null;
+                }
                 if(e.getButton() == MouseEvent.BUTTON1)
                     mouseFlag = true;
                 else if(e.getButton() == MouseEvent.BUTTON3) {
@@ -128,6 +169,8 @@ class GamePlay extends JFrame {
                     worker.interrupt();
                     worker = null;
                 }
+                rest = new Rest();
+                rest.start();
             }
 
             @Override

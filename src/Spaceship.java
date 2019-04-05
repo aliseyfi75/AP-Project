@@ -8,7 +8,6 @@ class Spaceship extends JLabel {
     private int y;
 
     private long temperature;
-    private long timeForRest;
     private long timeFree;
 
     private boolean flag = false;
@@ -26,38 +25,21 @@ class Spaceship extends JLabel {
         setLocation(x,y);
     }
 
-    void fireShot(gamePanel panel) {
-        temperature = temperature - (System.currentTimeMillis() - timeFree)/25;
-        if(temperature < 0)
-            temperature = 0;
-        System.out.println(temperature);
-        if(temperature < 100) {
-            timeFree = System.currentTimeMillis();
-            shot s = new shot();
-            s.setBounds(x + 40, y, 10, 10);
-            panel.add(s);
-            Timer timer = new Timer(5, e -> {
-                s.moveToPoint(s.getX(), s.getY() - 1);
-                if (s.getY() < 50)
-                    ((Timer) e.getSource()).stop();
-                panel.repaint();
-            });
-            timer.setRepeats(true);
-            timer.start();
-            temperature += 5;
-        }
-        else{
-            if (!flag) {
-                timeForRest = System.currentTimeMillis();
-                flag = true;
-            }
-            else
-                if (System.currentTimeMillis() - timeForRest > 4000){
-                    flag = false;
-                    temperature = 0;
-                }
-
-        }
+    void fireShot(gamePanel panel, JLabel temperatureLabel) {
+        timeFree = System.currentTimeMillis();
+        shot s = new shot();
+        s.setBounds(x + 40, y, 10, 10);
+        panel.add(s);
+        Timer timer = new Timer(5, e -> {
+            s.moveToPoint(s.getX(), s.getY() - 1);
+            if (s.getY() < 50)
+                ((Timer) e.getSource()).stop();
+            panel.repaint();
+        });
+        timer.setRepeats(true);
+        timer.start();
+        temperature += 5;
+        temperatureLabel.setText("temperature = " + temperature);
     }
     void fireBomb(gamePanel panel) {
         bomb b = new bomb();
@@ -71,5 +53,22 @@ class Spaceship extends JLabel {
         });
         timer.setRepeats(true);
         timer.start();
+    }
+
+    long getTemperature(){
+        return temperature;
+    }
+
+    void rest(JLabel temperatureLabel){
+        if(temperature<100) {
+            temperature--;
+            if (temperature < 0)
+                temperature = 0;
+            temperatureLabel.setText("temperature = " + temperature);
+        }
+    }
+
+    void setTemperature(long temperature){
+        this.temperature = temperature;
     }
 }
