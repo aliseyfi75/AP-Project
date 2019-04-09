@@ -88,6 +88,13 @@ class PlayerMenu extends JFrame {
         add(settingButton);
         aboutUsButton = new JButton("درباره ما");
         aboutUsButton.setBounds(width - horizontalMargin - smallButtonWidth, exitButton.getY(), smallButtonWidth, buttonHeight);
+        aboutUsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AboutUs aboutUs = new AboutUs(panel);
+                aboutUs.setVisible(true);
+            }
+        });
         add(aboutUsButton);
         rankingButton = new JButton("رتبه بندی");
         rankingButton.setBounds((width - bigButtonWidth) / 2, settingButton.getY() - verticalMargin - buttonHeight, bigButtonWidth, buttonHeight);
