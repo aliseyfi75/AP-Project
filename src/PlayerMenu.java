@@ -75,6 +75,13 @@ class PlayerMenu extends JFrame {
     private void initializeButtons() {
         exitButton = new JButton("خروج");
         exitButton.setBounds(horizontalMargin, height - 2 * verticalMargin - buttonHeight, smallButtonWidth, buttonHeight);
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                dispose();
+            }
+        });
         add(exitButton);
         settingButton = new JButton("تنظیمات");
         settingButton.setBounds((width - smallButtonWidth) / 2, exitButton.getY(), smallButtonWidth, buttonHeight);
